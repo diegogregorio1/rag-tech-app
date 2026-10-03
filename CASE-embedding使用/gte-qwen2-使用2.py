@@ -5,11 +5,20 @@
 
 
 # 导入必要的库
+import os
 import torch  # PyTorch深度学习库
 import torch.nn.functional as F  # PyTorch函数式接口，包含各种神经网络函数
 
 from torch import Tensor  # 导入Tensor类型，用于类型提示
-from modelscope import AutoTokenizer, AutoModel  # 从modelscope导入自动分词器和模型加载器
+from transformers import AutoTokenizer, AutoModel  # 从transformers导入自动分词器和模型加载器
+
+# 获取脚本所在目录，模型缓存到脚本下的 models 目录
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+MODEL_CACHE_DIR = os.path.join(SCRIPT_DIR, "models")
+
+# 模型下载（如已下载会直接使用缓存）
+from modelscope import snapshot_download
+model_dir = snapshot_download('iic/gte_Qwen2-1.5B-instruct', cache_dir=MODEL_CACHE_DIR)
 
 
 # 定义最后一个token池化函数
@@ -51,12 +60,11 @@ documents = [
 # 将查询和文档合并为一个输入文本列表
 input_texts = queries + documents
 
-# 设置模型路径
-model_dir = "/root/autodl-tmp/models/iic/gte_Qwen2-1___5B-instruct"
-# 加载分词器，trust_remote_code=True允许使用远程代码
-tokenizer = AutoTokenizer.from_pretrained(model_dir, trust_remote_code=True)
+# 加载分词器，不使用 trust_remote_code：模型自带的旧版 modeling_qwen.py 与新版 transformers 不兼容
+# transformers 4.x 已内置 Qwen2 实现
+tokenizer = AutoTokenizer.from_pretrained(model_dir, trust_remote_code=False)
 # 加载模型
-model = AutoModel.from_pretrained(model_dir, trust_remote_code=True)
+model = AutoModel.from_pretrained(model_dir, trust_remote_code=False)
 
 # 设置最大序列长度
 max_length = 8192

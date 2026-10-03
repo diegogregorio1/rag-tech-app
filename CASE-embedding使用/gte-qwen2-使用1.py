@@ -4,10 +4,16 @@
 # In[2]:
 
 
+import os
+
+# 获取脚本所在目录，模型缓存到脚本下的 models 目录
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+MODEL_CACHE_DIR = os.path.join(SCRIPT_DIR, "models")
+
 #模型下载
 from modelscope import snapshot_download
-#model_dir = snapshot_download('iic/gte_Qwen2-7B-instruct', cache_dir='/root/autodl-tmp/models')
-model_dir = snapshot_download('iic/gte_Qwen2-1.5B-instruct', cache_dir='/root/autodl-tmp/models')
+#model_dir = snapshot_download('iic/gte_Qwen2-7B-instruct', cache_dir=MODEL_CACHE_DIR)
+model_dir = snapshot_download('iic/gte_Qwen2-1.5B-instruct', cache_dir=MODEL_CACHE_DIR)
 
 
 # In[1]:
@@ -15,8 +21,10 @@ model_dir = snapshot_download('iic/gte_Qwen2-1.5B-instruct', cache_dir='/root/au
 
 from sentence_transformers import SentenceTransformer
 
-model_dir = "/root/autodl-tmp/models/iic/gte_Qwen2-1___5B-instruct"
-model = SentenceTransformer(model_dir, trust_remote_code=True)
+# snapshot_download 返回模型实际所在目录，直接使用
+# 不使用 trust_remote_code：模型自带的旧版 modeling_qwen.py 与新版 transformers 不兼容，
+# transformers 4.x 已内置 Qwen2 实现
+model = SentenceTransformer(model_dir, trust_remote_code=False)
 # In case you want to reduce the maximum length:
 model.max_seq_length = 8192
 

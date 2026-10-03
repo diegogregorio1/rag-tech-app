@@ -1,0 +1,361 @@
+[
+  {
+    "case": "时效性-开放状态",
+    "query": "上海迪士尼乐园今天开放吗？现在人多不多？",
+    "result": {
+      "confidence": 0.95,
+      "need_web_search": true,
+      "original_query": "上海迪士尼乐园今天开放吗？现在人多不多？",
+      "rewritten_query": "上海迪士尼乐园今天是否开放？现在游客数量多吗？",
+      "search_intent": "查询上海迪士尼乐园的开放状态和当前人流量情况",
+      "search_keywords": [
+        "上海迪士尼乐园",
+        "今天开放时间",
+        "游客数量",
+        "人流量"
+      ],
+      "search_reason": "用户询问上海迪士尼乐园今天的开放状态以及当前人流量，属于营业信息和实时状态的查询，需要联网搜索获取最新信息。",
+      "search_strategy": {
+        "extended_keywords": [
+          "上海迪士尼乐园今天是否开放",
+          "上海迪士尼人流量",
+          "上海迪士尼游客数量",
+          "上海迪士尼当前状态"
+        ],
+        "primary_keywords": [
+          "上海迪士尼乐园",
+          "开放情况"
+        ],
+        "search_platforms": [
+          "百度",
+          "Google",
+          "微博",
+          "知乎",
+          "携程"
+        ],
+        "time_range": "2026年10月04日"
+      },
+      "suggested_sources": [
+        "旅游网站",
+        "官方社交媒体账号",
+        "景点预订平台"
+      ]
+    }
+  },
+  {
+    "case": "价格信息",
+    "query": "北京环球影城门票现在多少钱？",
+    "result": {
+      "confidence": 0.95,
+      "need_web_search": true,
+      "original_query": "北京环球影城门票现在多少钱？",
+      "rewritten_query": "2024年北京环球影城门票价格",
+      "search_intent": "获取北京环球影城当前门票价格信息",
+      "search_keywords": [
+        "2024年",
+        "北京环球影城",
+        "门票价格"
+      ],
+      "search_reason": "用户询问的是北京环球影城门票的当前价格，属于价格信息，需要联网搜索获取最新、最准确的信息。",
+      "search_strategy": {
+        "extended_keywords": [
+          "北京环球影城票价",
+          "北京环球影城门票费用",
+          "北京环球影城门票多少钱"
+        ],
+        "primary_keywords": [
+          "北京环球影城门票价格"
+        ],
+        "search_platforms": [
+          "百度",
+          "Google",
+          "知乎",
+          "携程",
+          "马蜂窝"
+        ],
+        "time_range": "2026年10月"
+      },
+      "suggested_sources": [
+        "官方网站",
+        "旅游预订平台",
+        "新闻资讯网站"
+      ]
+    }
+  },
+  {
+    "case": "营业信息",
+    "query": "广州长隆欢乐世界万圣节夜场几点开始？",
+    "result": {
+      "confidence": 0.95,
+      "need_web_search": true,
+      "original_query": "广州长隆欢乐世界万圣节夜场几点开始？",
+      "rewritten_query": "广州长隆欢乐世界2024年万圣节夜场开放时间",
+      "search_intent": "获取广州长隆欢乐世界万圣节夜场的具体开始时间",
+      "search_keywords": [
+        "广州长隆欢乐世界",
+        "2024年",
+        "万圣节夜场",
+        "开放时间"
+      ],
+      "search_reason": "用户询问的是广州长隆欢乐世界万圣节夜场的具体开始时间，这属于活动信息，需要最新、准确的实时状态信息。",
+      "search_strategy": {
+        "extended_keywords": [
+          "广州长隆欢乐世界 万圣节 活动 时间",
+          "长隆欢乐世界 万圣节 夜场 开场时间",
+          "广州长隆 万圣节 夜场 时间"
+        ],
+        "primary_keywords": [
+          "广州长隆欢乐世界 万圣节夜场 开始时间"
+        ],
+        "search_platforms": [
+          "百度",
+          "Google",
+          "知乎",
+          "携程",
+          "马蜂窝"
+        ],
+        "time_range": "2026年10月1日 - 2026年10月31日"
+      },
+      "suggested_sources": [
+        "旅游网站",
+        "景点官网",
+        "百度百科",
+        "携程",
+        "马蜂窝"
+      ]
+    }
+  },
+  {
+    "case": "活动信息",
+    "query": "上海迪士尼最近有什么新的主题活动？",
+    "result": {
+      "confidence": 0.95,
+      "need_web_search": true,
+      "original_query": "上海迪士尼最近有什么新的主题活动？",
+      "rewritten_query": "2024年上海迪士尼乐园最新主题活动",
+      "search_intent": "获取信息",
+      "search_keywords": [
+        "2024年",
+        "上海迪士尼乐园",
+        "最新主题活动"
+      ],
+      "search_reason": "用户询问上海迪士尼最近的新主题活动，属于动态信息，需要最新、最准确的实时活动信息。",
+      "search_strategy": {
+        "extended_keywords": [
+          "上海迪士尼最新活动",
+          "迪士尼主题更新",
+          "上海迪士尼近期活动",
+          "迪士尼新玩法",
+          "上海迪士尼特别活动"
+        ],
+        "primary_keywords": [
+          "上海迪士尼",
+          "新主题活动"
+        ],
+        "search_platforms": [
+          "百度",
+          "Google",
+          "微博",
+          "小红书",
+          "知乎"
+        ],
+        "time_range": "2026年9月1日 - 2026年10月4日"
+      },
+      "suggested_sources": [
+        "旅游网站",
+        "官方社交媒体",
+        "新闻资讯平台"
+      ]
+    }
+  },
+  {
+    "case": "天气信息",
+    "query": "明天去迪士尼会下雨吗？",
+    "result": {
+      "confidence": 0.95,
+      "need_web_search": true,
+      "original_query": "明天去迪士尼会下雨吗？",
+      "rewritten_query": "明天上海迪士尼乐园天气情况是否会下雨",
+      "search_intent": "查询特定地点和时间的天气状况",
+      "search_keywords": [
+        "明天",
+        "上海迪士尼乐园",
+        "天气",
+        "下雨"
+      ],
+      "search_reason": "用户询问明天的天气情况，属于天气信息，需要联网搜索获取最新、最准确的信息。",
+      "search_strategy": {
+        "extended_keywords": [
+          "迪士尼明天是否下雨",
+          "迪士尼天气预报",
+          "明天迪士尼降雨情况",
+          "迪士尼天气状况"
+        ],
+        "primary_keywords": [
+          "明天迪士尼天气"
+        ],
+        "search_platforms": [
+          "Google",
+          "Baidu",
+          "Weather.com",
+          "AccuWeather"
+        ],
+        "time_range": "2026年10月05日"
+      },
+      "suggested_sources": [
+        "天气预报网站",
+        "旅游信息网站",
+        "气象局官网"
+      ]
+    }
+  },
+  {
+    "case": "交通信息",
+    "query": "从上海虹桥火车站怎么去迪士尼乐园？",
+    "result": {
+      "confidence": 0.95,
+      "need_web_search": true,
+      "original_query": "从上海虹桥火车站怎么去迪士尼乐园？",
+      "rewritten_query": "上海虹桥火车站到迪士尼乐园的交通方式",
+      "search_intent": "获取从上海虹桥火车站前往迪士尼乐园的交通路线信息",
+      "search_keywords": [
+        "上海虹桥火车站",
+        "迪士尼乐园",
+        "交通方式",
+        "公交",
+        "地铁"
+      ],
+      "search_reason": "用户询问的是从上海虹桥火车站到迪士尼乐园的交通方式，需要实时或最新的交通信息来提供准确路线和建议。",
+      "search_strategy": {
+        "extended_keywords": [
+          "上海虹桥站到迪士尼交通方式",
+          "如何从虹桥火车站到迪士尼",
+          "上海虹桥站到迪士尼路线",
+          "上海虹桥站到迪士尼公交/地铁",
+          "上海迪士尼交通指南"
+        ],
+        "primary_keywords": [
+          "从上海虹桥火车站怎么去迪士尼乐园"
+        ],
+        "search_platforms": [
+          "Google",
+          "百度",
+          "高德地图",
+          "百度地图",
+          "携程旅行"
+        ],
+        "time_range": "2026年10月"
+      },
+      "suggested_sources": [
+        "百度地图",
+        "高德地图",
+        "携程旅行",
+        "去哪儿网"
+      ]
+    }
+  },
+  {
+    "case": "预订信息",
+    "query": "国庆假期迪士尼门票需要提前几天预约？",
+    "result": {
+      "confidence": 0.95,
+      "need_web_search": true,
+      "original_query": "国庆假期迪士尼门票需要提前几天预约？",
+      "rewritten_query": "国庆假期迪士尼门票需要提前几天预约？",
+      "search_intent": "获取国庆假期期间迪士尼门票的预约时间信息",
+      "search_keywords": [
+        "国庆假期",
+        "迪士尼门票",
+        "提前预约",
+        "预约时间"
+      ],
+      "search_reason": "查询涉及预约信息，且具体预约时间可能因政策或流量变化而不同，需要最新数据支持。",
+      "search_strategy": {
+        "extended_keywords": [
+          "迪士尼预约时间",
+          "国庆节门票提前预约",
+          "迪士尼门票提前几天买",
+          "迪士尼门票预约规定"
+        ],
+        "primary_keywords": [
+          "国庆假期迪士尼门票",
+          "迪士尼门票预约"
+        ],
+        "search_platforms": [
+          "百度",
+          "Google",
+          "知乎",
+          "携程",
+          "马蜂窝"
+        ],
+        "time_range": "2026年1月1日至今"
+      },
+      "suggested_sources": [
+        "官方网站",
+        "旅游平台",
+        "官方公告",
+        "新闻资讯"
+      ]
+    }
+  },
+  {
+    "case": "实时状态",
+    "query": "现在疯狂动物城园区排队要多久？",
+    "result": {
+      "confidence": 0.95,
+      "need_web_search": true,
+      "original_query": "现在疯狂动物城园区排队要多久？",
+      "rewritten_query": "2024年上海迪士尼乐园疯狂动物城园区排队时间",
+      "search_intent": "获取上海迪士尼乐园疯狂动物城园区当前的排队时长信息",
+      "search_keywords": [
+        "2024年",
+        "上海迪士尼乐园",
+        "疯狂动物城",
+        "排队时间"
+      ],
+      "search_reason": "用户询问的是当前疯狂动物城园区的排队时间，属于实时状态信息。",
+      "search_strategy": {
+        "extended_keywords": [
+          "疯狂动物城排队时长",
+          "迪士尼疯狂动物城等待时间",
+          "疯狂动物城游玩时间",
+          "疯狂动物城排队情况"
+        ],
+        "primary_keywords": [
+          "疯狂动物城园区排队时间"
+        ],
+        "search_platforms": [
+          "Google",
+          "Baidu",
+          "TripAdvisor",
+          "Reddit"
+        ],
+        "time_range": "2026年1月1日至今"
+      },
+      "suggested_sources": [
+        "旅游网站",
+        "迪士尼官方App",
+        "社交媒体平台",
+        "旅游论坛"
+      ]
+    }
+  },
+  {
+    "case": "无需联网-常识",
+    "query": "秦始皇统一六国是哪一年？",
+    "result": {
+      "need_web_search": false,
+      "original_query": "秦始皇统一六国是哪一年？",
+      "reason": "查询不需要联网搜索"
+    }
+  },
+  {
+    "case": "无需联网-概念",
+    "query": "什么是RAG检索增强生成技术？",
+    "result": {
+      "need_web_search": false,
+      "original_query": "什么是RAG检索增强生成技术？",
+      "reason": "查询不需要联网搜索"
+    }
+  }
+]

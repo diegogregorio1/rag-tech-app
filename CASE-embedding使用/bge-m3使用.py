@@ -4,9 +4,15 @@
 # In[1]:
 
 
+import os
+
+# 获取脚本所在目录，模型缓存到脚本下的 models 目录
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+MODEL_CACHE_DIR = os.path.join(SCRIPT_DIR, "models")
+
 #模型下载
 from modelscope import snapshot_download
-model_dir = snapshot_download('BAAI/bge-m3', cache_dir='/root/autodl-tmp/models')
+model_dir = snapshot_download('BAAI/bge-m3', cache_dir=MODEL_CACHE_DIR)
 
 
 # In[1]:
@@ -14,7 +20,7 @@ model_dir = snapshot_download('BAAI/bge-m3', cache_dir='/root/autodl-tmp/models'
 
 from FlagEmbedding import BGEM3FlagModel
 
-model = BGEM3FlagModel('/root/autodl-tmp/models/BAAI/bge-m3',  
+model = BGEM3FlagModel(model_dir,
                        use_fp16=True) # Setting use_fp16 to True speeds up computation with a slight performance degradation
 
 sentences_1 = ["What is BGE M3?", "Defination of BM25"]

@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Query 联网搜索识别与改写</title>
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+        font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+        background: #f0f2f5;
+        min-height: 100vh;
+        padding: 24px;
+    }
+    .container { max-width: 900px; margin: 0 auto; }
+    .header {
+        background: linear-gradient(135deg, #4a6cf7, #6a4af7);
+        color: #fff;
+        padding: 28px 32px;
+        border-radius: 12px;
+        margin-bottom: 24px;
+    }
+    .header h1 { font-size: 24px; margin-bottom: 6px; }
+    .header p { font-size: 14px; opacity: .85; }
+    .card {
+        background: #fff;
+        border-radius: 12px;
+        padding: 24px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 8px rgba(0,0,0,.06);
+    }
+    .card h2 {
+        font-size: 17px;
+        margin-bottom: 16px;
+        color: #333;
+        border-left: 4px solid #4a6cf7;
+        padding-left: 10px;
+    }
+    label { display: block; font-size: 14px; color: #555; margin-bottom: 6px; }
+    textarea {
+        width: 100%;
+        border: 1px solid #d9d9d9;
+        border-radius: 8px;
+        padding: 10px 12px;
+        font-size: 14px;
+        font-family: inherit;
+        resize: vertical;
+        margin-bottom: 14px;
+        transition: border-color .2s;
+    }
+    textarea:focus { outline: none; border-color: #4a6cf7; }
+    .btn {
+        background: #4a6cf7;
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        padding: 10px 28px;
+        font-size: 15px;
+        cursor: pointer;
+        transition: background .2s;
+    }
+    .btn:hover { background: #3a5ce5; }
+    .btn:disabled { background: #a5b4fc; cursor: not-allowed; }
+    .badge {
+        display: inline-block;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 13px;
+        font-weight: 600;
+        margin-bottom: 14px;
+    }
+    .badge-yes { background: #e6f7e6; color: #2e9e44; }
+    .badge-no { background: #fdecec; color: #d64545; }
+    .field { margin-bottom: 12px; font-size: 14px; line-height: 1.7; }
+    .field .label { color: #888; margin-right: 6px; }
+    .tag {
+        display: inline-block;
+        background: #eef2ff;
+        color: #4a6cf7;
+        border-radius: 6px;
+        padding: 3px 10px;
+        font-size: 13px;
+        margin: 2px 4px 2px 0;
+    }
+    .strategy {
+        background: #fafbff;
+        border: 1px solid #e4e9ff;
+        border-radius: 8px;
+        padding: 14px 16px;
+        margin-top: 10px;
+    }
+    .error { color: #d64545; font-size: 14px; margin-top: 10px; }
+    .loading { color: #888; font-size: 14px; margin-top: 10px; }
+    #result { display: none; }
+</style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>Query 联网搜索识别与改写</h1>
+        <p>判断用户查询是否需要联网搜索，并生成改写查询与搜索策略</p>
+    </div>
+
+    <div class="card">
+        <h2>输入查询</h2>
+        <label for="query">当前查询（必填）</label>
+        <textarea id="query" rows="2" placeholder="例如：上海迪士尼乐园今天开放吗？现在人多不多？"></textarea>
+
+        <label for="history">对话历史（可选）</label>
+        <textarea id="history" rows="4" placeholder='例如：&#10;用户: "我想去上海迪士尼乐园玩"&#10;AI: "上海迪士尼乐园是一个很棒的选择！"'></textarea>
+
+        <button class="btn" id="submitBtn" onclick="doRewrite()">开始分析</button>
+        <div class="error" id="errorMsg"></div>
+        <div class="loading" id="loadingMsg" style="display:none;">正在分析，请稍候（需要调用大模型，约几秒）...</div>
+    </div>
+
+    <div class="card" id="result">
+        <h2>分析结果</h2>
+        <div id="resultBody"></div>
+    </div>
+</div>
+
+<script>
+function escapeHtml(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function tags(arr) {
+    if (!arr || !arr.length) return '<span style="color:#aaa">无</span>';
+    return arr.map(x => '<span class="tag">' + escapeHtml(x) + '</span>').join('');
+}
+
+async function doRewrite() {
+    const query = document.getElementById('query').value.trim();
+    const history = document.getElementById('history').value.trim();
+    const errorMsg = document.getElementById('errorMsg');
+    const loadingMsg = document.getElementById('loadingMsg');
+    const btn = document.getElementById('submitBtn');
+    errorMsg.textContent = '';
+    if (!query) { errorMsg.textContent = '请输入查询内容'; return; }
+
+    btn.disabled = true;
+    loadingMsg.style.display = 'block';
+    document.getElementById('result').style.display = 'none';
+
+    try {
+        const resp = await fetch('/api/rewrite', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({query: query, conversation_history: history})
+        });
+        const data = await resp.json();
+        if (!resp.ok) { errorMsg.textContent = data.error || '请求失败'; return; }
+        renderResult(data);
+    } catch (e) {
+        errorMsg.textContent = '网络错误: ' + e.message;
+    } finally {
+        btn.disabled = false;
+        loadingMsg.style.display = 'none';
+    }
+}
+
+function renderResult(data) {
+    const box = document.getElementById('resultBody');
+    let html = '';
+    if (data.need_web_search) {
+        html += '<div class="badge badge-yes">需要联网搜索</div>';
+        html += '<div class="field"><span class="label">搜索原因：</span>' + escapeHtml(data.search_reason) + '</div>';
+        html += '<div class="field"><span class="label">置信度：</span>' + escapeHtml(data.confidence) + '</div>';
+        html += '<div class="field"><span class="label">原始查询：</span>' + escapeHtml(data.original_query) + '</div>';
+        html += '<div class="field"><span class="label">改写查询：</span><b>' + escapeHtml(data.rewritten_query) + '</b></div>';
+        html += '<div class="field"><span class="label">搜索关键词：</span>' + tags(data.search_keywords) + '</div>';
+        html += '<div class="field"><span class="label">搜索意图：</span>' + escapeHtml(data.search_intent) + '</div>';
+        html += '<div class="field"><span class="label">建议来源：</span>' + tags(data.suggested_sources) + '</div>';
+        if (data.search_strategy) {
+            const s = data.search_strategy;
+            html += '<div class="strategy">';
+            html += '<div class="field"><span class="label">主要关键词：</span>' + tags(s.primary_keywords) + '</div>';
+            html += '<div class="field"><span class="label">扩展关键词：</span>' + tags(s.extended_keywords) + '</div>';
+            html += '<div class="field"><span class="label">搜索平台：</span>' + tags(s.search_platforms) + '</div>';
+            html += '<div class="field"><span class="label">时间范围：</span>' + escapeHtml(s.time_range) + '</div>';
+            html += '</div>';
+        }
+    } else {
+        html += '<div class="badge badge-no">不需要联网搜索</div>';
+        html += '<div class="field"><span class="label">原因：</span>' + escapeHtml(data.reason || '查询不需要联网搜索') + '</div>';
+        html += '<div class="field"><span class="label">原始查询：</span>' + escapeHtml(data.original_query) + '</div>';
+    }
+    box.innerHTML = html;
+    document.getElementById('result').style.display = 'block';
+}
+</script>
+</body>
+</html>
