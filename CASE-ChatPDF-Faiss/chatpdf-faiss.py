@@ -60,43 +60,47 @@ def process_text_with_splitter(text: str, char_page_mapping: List[int], save_pat
     # 分割文本
     chunks = text_splitter.split_text(text)
     print(f"文本被分割成 {len(chunks)} 个块。")
-        
+
     # 创建嵌入模型
     embeddings = DashScopeEmbeddings(
         model="text-embedding-v1",
         dashscope_api_key=DASHSCOPE_API_KEY,
     )
-    
-    # 从文本块创建知识库
-    knowledgeBase = FAISS.from_texts(chunks, embeddings)
-    print("已从文本块创建知识库。")
-    
-    # 为每个文本块找到对应的页码信息
+
+    # 先为每个文本块计算页码（取块内字符页码的众数），存入 FAISS metadata
     page_info = {}
+    metadatas = []
     current_pos = 0
-    
+
     for chunk in chunks:
         chunk_start = current_pos
         chunk_end = current_pos + len(chunk)
-        
+
         # 找到这个文本块中字符对应的页码
         chunk_pages = char_page_mapping[chunk_start:chunk_end]
-        
+
         # 取页码的众数（出现最多的页码）作为该块的页码
         if chunk_pages:
             # 统计每个页码出现的次数
             page_counts = {}
             for page in chunk_pages:
                 page_counts[page] = page_counts.get(page, 0) + 1
-            
+
             # 找到出现次数最多的页码
             most_common_page = max(page_counts, key=page_counts.get)
             page_info[chunk] = most_common_page
         else:
+            most_common_page = 1
             page_info[chunk] = 1  # 默认页码
-        
+
+        # 页码写入 metadata，随向量库一起保存/加载，避免用文本做 key 的冲突问题
+        metadatas.append({"page": most_common_page})
         current_pos = chunk_end
-    
+
+    # 从文本块创建知识库（携带页码 metadata）
+    knowledgeBase = FAISS.from_texts(chunks, embeddings, metadatas=metadatas)
+    print("已从文本块创建知识库。")
+
     knowledgeBase.page_info = page_info
     print(f'页码映射完成，共 {len(page_info)} 个文本块')
     
@@ -167,23 +171,28 @@ def load_knowledge_base(load_path: str, embeddings = None) -> FAISS:
 
 # 获取脚本所在目录，确保相对路径基于脚本位置
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-
-# 读取PDF文件
-pdf_path = os.path.join(SCRIPT_DIR, '浦发上海浦东发展银行西安分行个金客户经理考核办法.pdf')
-pdf_reader = PdfReader(pdf_path)
-# 提取文本和页码信息
-text, char_page_mapping = extract_text_with_page_numbers(pdf_reader)
-#print('page_numbers=',page_numbers)
-
-
-# In[9]:
-
-
-print(f"提取的文本长度: {len(text)} 个字符。")
-
-# 处理文本并创建知识库，同时保存到磁盘
 save_dir = os.path.join(SCRIPT_DIR, "vector_db")
-knowledgeBase = process_text_with_splitter(text, char_page_mapping, save_path=save_dir)
+
+# 向量库已存在则直接加载，避免重复调用 Embedding API 重新构建
+if os.path.exists(os.path.join(save_dir, "index.faiss")):
+    print("检测到已有向量库，直接加载...")
+    knowledgeBase = load_knowledge_base(save_dir)
+else:
+    # 读取PDF文件
+    pdf_path = os.path.join(SCRIPT_DIR, '浦发上海浦东发展银行西安分行个金客户经理考核办法.pdf')
+    pdf_reader = PdfReader(pdf_path)
+    # 提取文本和页码信息
+    text, char_page_mapping = extract_text_with_page_numbers(pdf_reader)
+    #print('page_numbers=',page_numbers)
+
+
+    # In[9]:
+
+
+    print(f"提取的文本长度: {len(text)} 个字符。")
+
+    # 处理文本并创建知识库，同时保存到磁盘
+    knowledgeBase = process_text_with_splitter(text, char_page_mapping, save_path=save_dir)
 
 # 示例：如何加载已保存的向量数据库
 # 注释掉以下代码以避免在当前运行中重复加载
@@ -235,13 +244,14 @@ if query:
     # 记录唯一的页码
     unique_pages = set()
 
-    # 显示每个文档块的来源页码
+    # 显示每个文档块的来源页码（优先读 metadata，兼容旧的 page_info）
     for doc in docs:
-        #print('doc=',doc)
-        text_content = getattr(doc, "page_content", "")
-        source_page = knowledgeBase.page_info.get(
-            text_content.strip(), "未知"
-        )
+        source_page = doc.metadata.get("page") if getattr(doc, "metadata", None) else None
+        if source_page is None:
+            text_content = getattr(doc, "page_content", "")
+            source_page = knowledgeBase.page_info.get(
+                text_content.strip(), "未知"
+            )
 
         if source_page not in unique_pages:
             unique_pages.add(source_page)

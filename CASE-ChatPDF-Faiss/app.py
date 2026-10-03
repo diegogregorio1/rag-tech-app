@@ -78,12 +78,14 @@ def chat():
 问题: {query}"""
         answer = llm.invoke(prompt)
 
-        # 收集来源页码（去重并排序）
+        # 收集来源页码（优先读 metadata，兼容旧的 page_info；去重并排序）
         unique_pages = []
         seen = set()
         for doc in docs:
-            text_content = getattr(doc, "page_content", "")
-            source_page = knowledgeBase.page_info.get(text_content.strip(), "未知")
+            source_page = doc.metadata.get("page") if getattr(doc, "metadata", None) else None
+            if source_page is None:
+                text_content = getattr(doc, "page_content", "")
+                source_page = knowledgeBase.page_info.get(text_content.strip(), "未知")
             if source_page not in seen:
                 seen.add(source_page)
                 unique_pages.append(source_page)
